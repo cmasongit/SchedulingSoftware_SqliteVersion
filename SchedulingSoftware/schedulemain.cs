@@ -18,8 +18,8 @@ namespace SchedulingSoftware
             SQLloader();
 
             timezonechange();
-            SetCurrentUser(smtemp.usernametb.Text);
-            SetCurrentuserid2(smtemp.GetCurrentuserid());
+            SetCurrentUser(smtemp.currentuser);
+           SetCurrentuserid2(smtemp.GetCurrentuserid());
 
             //  MessageBox.Show(smtemp.usernametb.Text);
           //  MessageBox.Show(smtemp.GetCurrentuserid().ToString());

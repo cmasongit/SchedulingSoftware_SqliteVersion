@@ -387,7 +387,7 @@ namespace SchedulingSoftware
                     cmdex1.Parameters.AddWithValue("@cityp", citynm);
                     cmdex1.Parameters.AddWithValue("@countryn", GetCurrentcountry());
                     cmdex1.Parameters.AddWithValue("@usern", sm.GetCurrentUser());
-              
+                    cmdex1.Parameters.AddWithValue("@NOW", DateTime.Now.ToString());
                     cmdex1.ExecuteNonQuery();
               
 
@@ -416,7 +416,7 @@ namespace SchedulingSoftware
 
 
                   
-                    cmdex1.CommandText = "INSERT INTO customer(customerName, addressID,active, createDate, createdBy, lastUpdate, lastUpdateBy) VALUES('" + fnln + "'," + GetCurrentAddress() + "," + 1 + "','" + DateTime.Now.ToString() + "','" + sm.GetCurrentUser() + "','"+ DateTime.Now.ToString() + "','" + sm.GetCurrentUser() + "' );";
+                    cmdex1.CommandText = "INSERT INTO customer(customerName, addressID,active, createDate, createdBy, lastUpdate, lastUpdateBy) VALUES('" + fnln + "','" + GetCurrentAddress() + "'," + 1 + ",'" + DateTime.Now.ToString() + "','" + sm.GetCurrentUser() + "','"+ DateTime.Now.ToString() + "','" + sm.GetCurrentUser() + "' );";
        
 
 

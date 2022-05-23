@@ -213,20 +213,24 @@ namespace SchedulingSoftware
         public List<string> usernamelog = new List<string>();
         public List<string> passwordlog = new List<string>();
 
+        public void clearlist()
+        {
+            userid.Clear();
+            usernamelog.Clear();
+            passwordlog.Clear();
+        }
+
+
 
         //The following code loads USER table from a SQL Database.
-        private void loginSQL()
+        public void loginSQL()
         {
+            clearlist();
+            
             string logger = "SELECT ID, userName, Password FROM user;";
            
 
-           // string attach = "SERVER=localhost;DATABASE=client_schedule;UID=sqlUser;PASSWORD=Passw0rd!;";
-          //  string attach = "SERVER=127.0.0.1;DATABASE=client_schedule;UID=sqlUser;PASSWORD=Passw0rd!;";
-            //string attach = "SERVER=127.0.0.1;DATABASE=client_schedule;UID=sqlUser;PASSWORD=Passw0rd!;";
-           
-            
-          //  MySqlConnection mySql = new MySqlConnection(attach);
-          //  mySql.Open();
+          
           sqlitecon slc = new sqlitecon();
 
          SqliteConnection conn = slc.connection;
@@ -265,11 +269,12 @@ namespace SchedulingSoftware
         public void SetCurrentuserid(int a) { this.currentuserid = a; }
         public int GetCurrentuserid() { return currentuserid; }
 
+        public string currentuser { get; set; }
 
 
 
         //The following code uses the table loaded from the SQL Database and compares the table to the data inputted in the textboxes.
-        public void logincheck()
+        public void logincheck(string a , string b)
         {
             CancelEventArgs cancel = new CancelEventArgs();
 
@@ -286,14 +291,14 @@ namespace SchedulingSoftware
 
                 for (int i = 0; i < usernamelog.Count; i++)
                 {
-                    if (usernamelog[i] == usernametb.Text && passwordlog[i] == passwordtb.Text)
+                    if (usernamelog[i] == a && passwordlog[i] == b)
                     {
                         SetCurrentuserid(userid[i]);
 
                         MessageBox.Show("Iniciar sesión con éxito");
                         var path = "logindata.txt";
                         DateTime now = DateTime.Now;
-                        string text = now + " " + "User" + " " + usernametb.Text + " Iniciar sesión con éxito";
+                        string text = now + " " + "User" + " " + a + " Iniciar sesión con éxito";
                         //File.WriteAllText(path, text);
                         File.AppendAllText(path, text + Environment.NewLine);
 
@@ -306,7 +311,7 @@ namespace SchedulingSoftware
                     }
 
                     // MessageBox.Show(i.ToString());
-                    if (usernamelog[i] == usernametb.Text && passwordlog[i] != passwordtb.Text)
+                    if (usernamelog[i] == a && passwordlog[i] != b)
                     {
 
                         MessageBox.Show("La contraseña es incorrecta. Intentar otra vez");
@@ -314,12 +319,7 @@ namespace SchedulingSoftware
 
                         //  i++;
                     }
-                    else if (usernamelog[i] != usernametb.Text && passwordlog[i] == passwordtb.Text)
-                    {
-                        MessageBox.Show("El nombre de usuario es incorrecto. Intentar otra vez");
-                        break;
-
-                    }
+                   
 
 
                     else if (i == usernamelog.Count - 1)
@@ -342,18 +342,26 @@ namespace SchedulingSoftware
 
 
 
-                    if (usernamelog[i] == usernametb.Text && passwordlog[i] == passwordtb.Text)
+                    if (usernamelog[i] == a && passwordlog[i] == b)
                     {
                         SetCurrentuserid(userid[i]);
+                        currentuser = a;
+                        MessageBox.Show("User" + " " + a + " login successfully");
 
-                        MessageBox.Show("Login Successful");
+                        // SetCurrentUser(smtemp.usernametb.Text);
+                        //  SetCurrentuserid2(smtemp.GetCurrentuserid());
+
+
                         var path = "logindata.txt";
                         DateTime now = DateTime.Now;
-                        string text = now + " " + "User" + " " + usernametb.Text + " login successfully";
+                        string text = now + " " + "User" + " " + a + " login successfully";
                         //File.WriteAllText(path, text);
                         File.AppendAllText(path, text + Environment.NewLine);
 
                         schedulemain sm = new schedulemain(this);
+
+                   
+
                         sm.Show();
 
 
@@ -362,31 +370,20 @@ namespace SchedulingSoftware
                     }
 
                     // MessageBox.Show(i.ToString());
-                    if (usernamelog[i] == usernametb.Text && passwordlog[i] != passwordtb.Text)
+                    if (usernamelog[i] == a && passwordlog[i] != b)
                     {
 
                         MessageBox.Show("Password is Incorrect. Try Again");
                         var path = "logindata.txt";
                         DateTime now = DateTime.Now;
-                        string text = now + " " + "User" + " " + usernametb.Text + " Login Failed";
+                        string text = now + " " + "User" + " " + a + " Login Failed";
                         //File.WriteAllText(path, text);
                         File.AppendAllText(path, text + Environment.NewLine);
                         break;
 
                         //  i++;
                     }
-                    else if (usernamelog[i] != usernametb.Text && passwordlog[i] == passwordtb.Text)
-                    {
-                        MessageBox.Show("UserName is Incorrect. Try Again");
-                        var path = "logindata.txt";
-                        DateTime now = DateTime.Now;
-                        string text = now + " " +"Login Failed";
-                        //File.WriteAllText(path, text);
-                        File.AppendAllText(path, text + Environment.NewLine);
-
-                        break;
-
-                    }
+                  
 
 
                     else if (i == usernamelog.Count - 1)
@@ -400,51 +397,13 @@ namespace SchedulingSoftware
 
 
 
-                    // MessageBox.Show(i.ToString()  );
 
 
                 }
 
 
-                /*
-                foreach (string z in usernamelog)
-                {
-                    if (usernametb.Text == z)
-                    {
-                        MessageBox.Show("User Found");
-                       // MessageBox.Show(usernamelog.IndexOf(z).ToString());
-                        int temp = usernamelog.IndexOf(z);
+               
 
-                            if (passwordlog.ElementAt(temp)==passwordtb.Text)
-                            {
-                           // MessageBox.Show("TEMP " + temp.ToString());
-                                MessageBox.Show("Password Found");
-                            }
-                            else
-                            {
-                                MessageBox.Show("Password is Incorrect");
-                            errormessagelabel.Text = "UserName and Password are not a match.";
-                            errorcasemessage.Text = "UserName and Password are case-sensitive.";
-
-                                    break;
-                            }
-
-                       break;
-                    }
-                    else
-                    {
-                        MessageBox.Show("User Not Found");
-                        errormessagelabel.Text = "User was not found.";
-                        errorcasemessage.Text = "UserName and Password are Case-Sensitive.";
-
-                    }
-                }
-
-                */
-
-
-                //  MessageBox.Show(usernamelog[1].ToString());
-                //  MessageBox.Show(passwordlog[1].ToString());
 
             }
 
@@ -460,7 +419,11 @@ namespace SchedulingSoftware
 
         private void mpsubmit_Click(object sender, EventArgs e)
         {
-            logincheck();
+            clearlist();
+            
+            loginSQL();
+            
+            logincheck(usernametb.Text, passwordtb.Text);
 
         }
 
@@ -530,6 +493,12 @@ namespace SchedulingSoftware
 
 
 
+        }
+
+        private void createbtn_Click(object sender, EventArgs e)
+        {
+            CreateUser a = new CreateUser();
+            a.Show();
         }
     }
 }
